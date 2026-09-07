@@ -27,7 +27,7 @@ class HtmlErrorHandler(ValidationResultHandlerBase):
 
     def __init__(self, dicom_info: DicomInfo) -> None:
         self.dicom_info = dicom_info
-        self._formatter = ValidationResultFormatter(dicom_info.dictionary)
+        self.formatter = ValidationResultFormatter(dicom_info.dictionary)
         self.html = ""
         self.sop_class = ""
 
@@ -43,7 +43,7 @@ class HtmlErrorHandler(ValidationResultHandlerBase):
 
     def handle_failed_validation_start(self, result: ValidationResult) -> None:
         """Add a paragraph explaining why the validation could not be started."""
-        message = self._formatter.failed_validation_message(result)
+        message = self.formatter.failed_validation_message(result)
         self.html += f"<p>{html.escape(message)}</p>"
 
     @staticmethod
@@ -123,9 +123,7 @@ class HtmlErrorHandler(ValidationResultHandlerBase):
     def handle_tag_error(self, tag_id: DicomTag, error: TagError) -> None:
         """Append a single tag error as an HTML list item."""
         tag_name = tag_name_from_id(tag_id.tag, self.dicom_info.dictionary)
-        message = html.escape(self._formatter.error_message(error)).replace(
-            "\n", "<br>"
-        )
+        message = html.escape(self.formatter.error_message(error)).replace("\n", "<br>")
         self.html += f"<li>{tag_name}{message}</li>\n"
 
     def handle_tag_parents_start(self, parents: list[BaseTag]) -> None:

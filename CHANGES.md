@@ -18,6 +18,10 @@ The released versions correspond to PyPi releases.
   `HtmlErrorHandler` (see [#291](https://github.com/pydicom/dicom-validator/issues/291))
 * added `NullValidationResultHandler`, a no-op handler as already seen in the API
   documentation, provided as a small convenience.
+* `LoggingResultHandler` and `HtmlErrorHandler` now expose the
+  `ValidationResultFormatter` they use as a public `formatter` attribute, so a
+  subclass can reuse the default rendering (e.g. `self.formatter.error_message(...)`)
+  without constructing its own separate formatter.
 
 ### Fixes
 * `HtmlErrorHandler`  now reports why validation cannot be started, matching `LoggingResultHandler`

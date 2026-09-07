@@ -242,7 +242,7 @@ class LoggingResultHandler(ValidationResultHandlerBase):
     def __init__(self, dicom_info: DicomInfo, logger: logging.Logger) -> None:
         self.dicom_info = dicom_info
         self.logger = logger
-        self._formatter = ValidationResultFormatter(dicom_info.dictionary)
+        self.formatter = ValidationResultFormatter(dicom_info.dictionary)
 
     def handle_validation_start(self, result: ValidationResult) -> None:
         iod_info = self.dicom_info.iods[result.sop_class_uid]
@@ -270,7 +270,7 @@ class LoggingResultHandler(ValidationResultHandlerBase):
     def handle_tag_error(self, tag_id: DicomTag, error: TagError) -> None:
         indent = 1 if tag_id.parents else 0
         tag_name = tag_name_from_id(tag_id.tag, self.dicom_info.dictionary)
-        message = self._formatter.error_message(error, indent)
+        message = self.formatter.error_message(error, indent)
         self.logger.warning(f"{'  ' * indent}Tag {tag_name}{message}")
 
     def handle_validation_result_start(
@@ -286,7 +286,7 @@ class LoggingResultHandler(ValidationResultHandlerBase):
             self.logger.info("\n")
 
     def handle_failed_validation_start(self, result: ValidationResult) -> None:
-        self.logger.error(self._formatter.failed_validation_message(result))
+        self.logger.error(self.formatter.failed_validation_message(result))
 
 
 def default_error_handler(dicom_info: DicomInfo, log_level: int = logging.INFO):
