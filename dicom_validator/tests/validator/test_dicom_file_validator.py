@@ -101,7 +101,6 @@ def test_that_pixeldata_is_read(dicom_fixture_path, validator: DicomFileValidato
     result_dict = validator.validate(rtdose_path)
     assert len(result_dict) == 1
     result = result_dict[str(rtdose_path)]
-    assert result.module_errors is not None
     assert "RT Series" in result.module_errors
     oper_name_error = result.module_errors["RT Series"].get(DicomTag(0x0008_1070))
     assert oper_name_error is not None

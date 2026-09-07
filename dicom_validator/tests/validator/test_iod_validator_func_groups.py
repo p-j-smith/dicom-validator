@@ -110,7 +110,6 @@ class TestIODValidatorFuncGroups:
 
     @staticmethod
     def ensure_group_result(result: ValidationResult) -> TagErrors:
-        assert result.module_errors is not None
         assert "Multi-frame Functional Groups" in result.module_errors
         return result.module_errors["Multi-frame Functional Groups"]
 

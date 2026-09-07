@@ -270,8 +270,8 @@ class LoggingResultHandler(ValidationResultHandlerBase):
     def handle_tag_error(self, tag_id: DicomTag, error: TagError) -> None:
         indent = 1 if tag_id.parents else 0
         tag_name = tag_name_from_id(tag_id.tag, self.dicom_info.dictionary)
-        msg = f"{'  ' * indent}Tag {tag_name}{self.error_message(error, indent)}"
-        self.logger.warning(msg)
+        message = self._formatter.error_message(error, indent)
+        self.logger.warning(f"{'  ' * indent}Tag {tag_name}{message}")
 
     def handle_validation_result_start(
         self, validation_result: ValidationResult
@@ -287,25 +287,6 @@ class LoggingResultHandler(ValidationResultHandlerBase):
 
     def handle_failed_validation_start(self, result: ValidationResult) -> None:
         self.logger.error(self._formatter.failed_validation_message(result))
-
-    def error_message(self, error: TagError, indent: int) -> str:
-        """Return a human-readable message fragment for a tag error.
-
-        Parameters
-        ----------
-        error : TagError
-            The error to be rendered.
-        indent : int
-            Current indentation level, in case the message itself needs to
-            be indented further (e.g. for a condition on multiple lines).
-
-        Returns
-        -------
-        str
-            A message fragment starting with a space, to be appended after
-            the tag name.
-        """
-        return self._formatter.error_message(error, indent)
 
 
 def default_error_handler(dicom_info: DicomInfo, log_level: int = logging.INFO):

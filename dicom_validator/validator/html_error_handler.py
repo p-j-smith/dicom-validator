@@ -120,44 +120,13 @@ class HtmlErrorHandler(ValidationResultHandlerBase):
         """Close the HTML list for the current module's errors."""
         self.html += "</ul>\n"
 
-    @staticmethod
-    def error_message(error: TagError) -> str:
-        """Return a human-readable message fragment for a tag error.
-
-        Parameters
-        ----------
-        error : TagError
-            The error to be rendered.
-
-        Returns
-        -------
-        str
-            A short message starting with a space to append after the tag name.
-        """
-        message = ValidationResultFormatter().error_message(error)
-        return html.escape(message).replace("\n", "<br>")
-
-    def tag_name(self, tag_id: BaseTag) -> str:
-        """Return a human-readable name for a tag, including its ID.
-
-        Parameters
-        ----------
-        tag_id : BaseTag
-            DICOM tag identifier.
-
-        Returns
-        -------
-        str
-            A string like '(0010,0010) (Patient's Name)' when known, otherwise
-            the tag ID string.
-        """
-        return tag_name_from_id(tag_id, self.dicom_info.dictionary)
-
     def handle_tag_error(self, tag_id: DicomTag, error: TagError) -> None:
         """Append a single tag error as an HTML list item."""
-        self.html += (
-            f"<li>{self.tag_name(tag_id.tag)}{self.error_message(error)}</li>\n"
+        tag_name = tag_name_from_id(tag_id.tag, self.dicom_info.dictionary)
+        message = html.escape(self._formatter.error_message(error)).replace(
+            "\n", "<br>"
         )
+        self.html += f"<li>{tag_name}{message}</li>\n"
 
     def handle_tag_parents_start(self, parents: list[BaseTag]) -> None:
         """Start a new section header listing parent sequence tags."""
