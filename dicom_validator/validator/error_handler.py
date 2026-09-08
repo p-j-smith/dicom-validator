@@ -140,7 +140,7 @@ class ValidationResultFormatter:
     """Renders `TagError` and `ValidationResult` objects as human-readable text."""
 
     def __init__(self, dictionary: dict | None = None) -> None:
-        """Initialise the formatter.
+        """Initialize the formatter.
 
         Parameters
         ----------

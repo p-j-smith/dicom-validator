@@ -84,31 +84,17 @@ Note that the error handling API is very simple.
 
 A null handler
 ~~~~~~~~~~~~~~
-If you do not want to do any handling, you can write a null handler:
+If you do not want to do any handling, you can use
+:class:`~dicom_validator.validator.error_handler.NullValidationResultHandler`, a
+handler that does no reporting:
 
 .. code:: python
 
-    from dicom_validator.validator.error_handler import ValidationResultHandler
-
-    class NullValidationResultHandler(ValidationResultHandler):
-        """Handler that does nothing."""
-
-        def handle_validation_start(self, result: ValidationResult):
-            pass
-
-        def handle_validation_result(self, result: ValidationResult):
-            pass
-
-And use this for your validation:
-
-.. code:: python
+    from dicom_validator.validator.error_handler import NullValidationResultHandler
 
     validator = IODValidator(ds, dicom_info, error_handler=NullValidationResultHandler())
     result = validator.validate()
     # handle the result yourself
-
-For convenience, a null handler is implemented in
-:class:`~dicom_validator.validator.error_handler.NullValidationResultHandler`.
 
 Formatting results and errors
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -124,7 +110,7 @@ it returns:
     from dicom_validator.validator.error_handler import ValidationResultFormatter
 
     formatter = ValidationResultFormatter(dicom_info.dictionary)
-    for module_name, tag_errors in (result.module_errors or {}).items():
+    for module_name, tag_errors in result.module_errors.items():
         for tag_id, error in tag_errors.items():
             print(f"{module_name}: {tag_id}{formatter.error_message(error)}")
 
